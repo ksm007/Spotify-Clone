@@ -1,7 +1,7 @@
 import { Song } from "../models/song.model.js";
 import { Album } from "../models/album.model.js";
 import cloudinary from "../lib/cloudinary.js";
-import { protectRoute, requireAdmin } from "../middleware/auth.middleware.js";
+import { clerkClient } from "@clerk/express";
 
 const uploadToCloudinary = async (file) => {
   try {
@@ -109,5 +109,13 @@ export const deleteAlbum = async (req, res, next) => {
 };
 
 export const checkAdmin = async (req, res, next) => {
-  res.status(200).json({ admin: true });
+  try {
+    const currentUser = await clerkClient.users.getUser(req.auth.userId);
+    const isAdmin =
+      process.env.ADMIN_EMAIL === currentUser.primaryEmailAddress?.emailAddress;
+    if (!isAdmin) res.status(200).json({ admin: false });
+    else res.status(200).json({ admin: true });
+  } catch (error) {
+    next(error);
+  }
 };

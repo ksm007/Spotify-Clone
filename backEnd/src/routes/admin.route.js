@@ -10,13 +10,12 @@ import { protectRoute, requireAdmin } from "../middleware/auth.middleware.js";
 
 const router = Router();
 //clean code
-router.use(protectRoute, requireAdmin);
 
-router.get("/check", checkAdmin);
-router.post("/songs", createSong);
-router.delete("/songs/:id", deleteSong);
+router.get("/check",protectRoute, checkAdmin);
+router.post("/songs",protectRoute, requireAdmin, createSong);
+router.delete("/songs/:id",protectRoute, requireAdmin, deleteSong);
 
-router.post("/albums", createAlbum);
-router.delete("/albums/:id", deleteAlbum);
+router.post("/albums",protectRoute, requireAdmin, createAlbum);
+router.delete("/albums/:id",protectRoute, requireAdmin, deleteAlbum);
 
 export default router;

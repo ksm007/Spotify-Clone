@@ -7,8 +7,7 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "./ui/button";
 
 const Topbar = () => {
-  const isAdmin = useAuthStore();
-  console.log({ isAdmin });
+  const {isAdmin} = useAuthStore();
 
   return (
     <div className="flex items-center justify-between p-4 sticky top-0 bg-zinc-800/75 backdrop-blur-md z-10">
