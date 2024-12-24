@@ -17,7 +17,6 @@ import { connectDB } from "./lib/db.js";
 import { createServer } from "http";
 import { initializeSocket } from "./lib/socket.js";
 
-
 dotenv.config();
 const __dirname = path.resolve();
 const app = express();
@@ -36,12 +35,21 @@ app.use(
 );
 const httpServer = createServer(app);
 initializeSocket(httpServer);
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
+
+if (process.env.NODE_ENV === "development") {
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
+} else {
+  app.use(
+    cors({
+      origin: "https://spotify-clone-gi9v.onrender.com",
+    })
+  );
+}
 
 //cron jobs for deleting old files
 

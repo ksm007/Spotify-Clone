@@ -8,6 +8,8 @@ const SignInOAuthButons = () => {
     return null;
   }
   const signInWithGoogle = () => {
+    console.log("signing in with google");
+
     signIn.authenticateWithRedirect({
       strategy: "oauth_google",
       redirectUrl: "/sso-callback",
