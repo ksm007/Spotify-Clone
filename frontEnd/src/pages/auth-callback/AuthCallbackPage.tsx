@@ -14,13 +14,12 @@ const AuthCallbackPage = () => {
       try {
         if (!user || !isLoaded || syncAttempted.current) return;
         syncAttempted.current = true;
-        const response = await axiosInstance.post("/auth/callback", {
+        await axiosInstance.post("/auth/callback", {
           id: user.id,
           firstName: user.firstName,
           lastName: user.lastName,
           imageUrl: user.imageUrl,
         });
-        console.log(response.data, "sync user ");
       } catch (error) {
         console.log("Error in auth callback");
       } finally {
