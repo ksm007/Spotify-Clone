@@ -17,6 +17,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { initSocket, disconnectSocket } = useChatStore();
   const [loading, setLoading] = useState(true);
   const { checkAdminStatus } = useAuthStore();
+
   useEffect(() => {
     const initAuth = async () => {
       try {
@@ -42,6 +43,30 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       disconnectSocket();
     };
   }, [getToken, userId, checkAdminStatus, initSocket, disconnectSocket]);
+
+  // Add interceptor to refresh token on every request
+  useEffect(() => {
+    const interceptor = axiosInstance.interceptors.request.use(
+      async (config) => {
+        try {
+          const token = await getToken();
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          }
+        } catch (error) {
+          console.error("Error getting token for request:", error);
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      },
+    );
+
+    return () => {
+      axiosInstance.interceptors.request.eject(interceptor);
+    };
+  }, [getToken]);
 
   if (loading)
     return (
